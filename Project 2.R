@@ -5,7 +5,7 @@ library(caTools)
 library(car)
 
 ## load the data
-path <- r'{C:\Users\91835\Dropbox\PC\Courses\EDVANCER_EDUVENTURES\R\PROJECT\Project2- Retail\}'
+path <- r'{C:\-\PROJECT\Project2- Retail\}'
 
 store_train <- read.csv(paste0(path,'store_train.csv'))
 store_test <- read.csv(paste0(path,'store_test.csv'))
