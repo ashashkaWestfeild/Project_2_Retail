@@ -5,7 +5,7 @@ library(caTools)
 library(car)
 
 ## load the data
-path <- r'{C:\-\PROJECT\Project2- Retail\}'
+path <- r'{C:\Users\91835\Dropbox\PC\Courses\EDVANCER_EDUVENTURES\PROJECT\Project2- Retail\}'
 
 store_train <- read.csv(paste0(path,'store_train.csv'))
 store_test <- read.csv(paste0(path,'store_test.csv'))
@@ -65,7 +65,30 @@ prop.table(table(df$store))
 # sum(is.na(df$state_alpha))
 # sum(is.na(df$store_Type))
 # sum(is.na(df$store))
-# 
+
+##------------------------
+barplot(table(df$store))
+
+# continuous features
+hist(df$sales0) # Right Skewed
+hist(df$sales1) # Right Skewed
+hist(df$sales2) # Right Skewed
+hist(df$sales3) # Right Skewed
+hist(df$sales4) # Right Skewed
+hist(df$CouSub) # Left Skewed
+boxplot(df$CouSub)
+hist(df$population) # Right Skewed
+boxplot(df$population)
+
+barplot(table(df$country))
+barplot(table(df$State))
+barplot(table(df$countyname))
+barplot(table(df$storecode))
+barplot(table(df$Areaname))
+barplot(table(df$countytownname))
+barplot(table(df$state_alpha))
+barplot(table(df$store_Type))
+
 # length(unique(df$country)) # 274
 # country <- data.frame(prop.table(table(df$country)), table(df$country))[-3]
 # View(country) # freq = 0.02
@@ -101,6 +124,10 @@ prop.table(table(df$store))
 # length(unique(df$store_Type)) # 4
 # prop.table(table(df$store_Type))
 
+# Test for co-relation 
+cor.test(df$store, df$Id) # |-0.04219515| < 0.5
+cor.test(df$store, df$State) # |-0.04204406| < 0.5
+
 # dummy to replace storecode
 unique(substr(df$storecode,1,5)) # "NCNTY" "METRO"
 
@@ -112,7 +139,7 @@ sum(grepl('<', df$countyname)) # 10
 
 quantile(df$population, na.rm = TRUE)
 sum(df$population<10, na.rm = TRUE)
-# df[is.na(df$population),'population']=median(df$population, na.rm = TRUE) 
+# df[is.na(df$population),'population']=median(df$population, na.rm = TRUE) => later done in recipe
 
 # percentage increase between sales
 (df$sales1-df$sales0)*100/df$sales0
@@ -231,6 +258,8 @@ summary(log_model1)
 ## Saving Model
 saveRDS(log_model1, file = paste0(path,'log_model1.RDS'))
 
+log_model1 <- readRDS(paste0(path,'log_model1.RDS'))
+
 ## Predicting
 t2_pred <- predict(log_model1, newdata = t2, type = 'response')
 t1_pred <- predict(log_model1, newdata = t1, type = 'response')
@@ -260,7 +289,7 @@ pROC::auc(train$store, train_pred) # 0.8485
 rocit <- ROCit::rocit(score = train_pred, class = train$store)
 k_plot <- ROCit::ksplot(rocit, legend = FALSE)
 
-cuttoff <- k_plot$`KS Cutoff`
+cuttoff <- k_plot$`KS Cutoff` # 0.7929444
 
 ## Final TEST value prediction
 test_pred <- predict(final_log_model1, newdata = test, type = 'response')
