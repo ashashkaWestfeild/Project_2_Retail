@@ -298,7 +298,12 @@ final_test_pred <- as.numeric(test_pred>cuttoff)
 
 write.csv(final_test_pred, file = paste0(path,'final_test_pred.csv'), row.names = FALSE)
 
+#-Lift-Chart(capture.xlsx)
+gtable10 = gainstable(score = train_pred, class = train$store, 
+                      ngroup = 10)
 
+print(gtable10)
+plot(gtable10, type = 1)
 
 
 
