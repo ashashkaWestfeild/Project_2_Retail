@@ -1,0 +1,57 @@
+1. What buisness problem your project will solve?
+The business problem that this project aims to solve is the prediction of whether a store should be opened or not based on various factors such as sales, population, and area. By building a predictive model using the provided dataset, we can assist in decision-making processes for retail businesses. The model will analyze the historical data in the store_train.csv file to identify patterns and relationships between the factors and the target variable 'store'. Once the model is developed, it can be used to predict the 'store' values for the store_test.csv dataset, which contains all the relevant factors except the 'store' column. This allows businesses to make informed decisions on whether to open a store based on the predicted values.
+
+2.Understand the shape of the data (Histograms, box plots, etc.)
+Loading the data: The dataset is loaded into R to enable data access and analysis.
+Checking the dependent variable: The glimpse() function is used to obtain an overview of the dataset, including the variable types. This step helps identify the dependent variable, which is crucial for predictive or analytical purposes.
+Checking event rate: The event rate, which is obtained as 0.4382864, is calculated. This rate helps determine the approach and validation metric for the project.
+Checking missing values: An assessment is conducted to identify any missing values in the dataset. Missing data can affect the accuracy and reliability of the analysis, so appropriate handling strategies such as imputation or removal may be required.
+Histogram and box plot analysis for numeric features: Histograms and box plots are used to examine the distribution of numeric features, including the dependent variable. Histograms provide insights into the frequency or count of values within specific intervals, while box plots summarize the central tendency, spread, and presence of outliers in the data.
+Identifying right-skewness: By observing the histograms and box plots, it is determined that many of the numeric columns exhibit a right-skewed distribution. Right-skewness indicates that the majority of values are concentrated towards the lower end of the distribution, with a long tail extending towards higher values.
+Proportional analysis of categorical columns: For categorical columns, the prop.table() function is utilized to calculate and visualize the proportions of different categories within each column. This step helps in understanding the distribution and relative frequencies of the categorical variables.
+Bar plot on categorical features: Bar plots are created to further explore the categorical features. Bar plots provide a graphical representation of the distribution of categories within a categorical variable, allowing for easy comparison and visualization of the data.
+
+3.Data Cleaning & Exploration‬
+During the data cleaning and exploration, it was discovered that the "storecode" feature had unique values for each row. However, further analysis revealed that the first five letters of the store codes had only two distinct values: "NCNTY" and "METRO." To address this, the first five letters were extracted from each store code and stored in a new column. There were only two unique values in the extracted data.
+Correlation Analysis: Explored the correlation between numeric features and the outcome variable to identify significant relationships.
+Data Type Conversion: Converted country column to character format to prevent unintended data conversions.
+
+4. Feature Engineering
+"storecode" and "store_Type": One-hot encoding was utilized to create a binary indicator column specifically for the "NCNTY" value in the "storecode" feature. This transformation enabled the representation of this categorical variable in a more meaningful way.
+Percent change in sales: To capture the percentage change in sales between different time periods, four new variables were created based on the "sales" values. These variables, namely "PI_in_sales1," "PI_in_sales2," "PI_in_sales3," and "PI_in_sales4," represent the percentage increase in sales from the previous time period (e.g., "sales0" to "sales1"). By incorporating this information, the dataset gained insights into the sales growth patterns.
+"country," "countyname," and "state_alpha": Count encoding was applied to these categorical features. This encoding technique created new features that represent the count of occurrences for each unique value in their respective columns. By capturing the frequency information, the model can potentially learn patterns associated with different categories.
+
+5. Model selection (Why particular model is selected?)
+Considering that the target variable in this dataset is categorical in nature, the logistic regression model was chosen for the analysis. Logistic regression is a commonly used statistical model for binary or multi-class classification tasks.
+Here are the reasons for selecting logistic regression:
+Categorical target variable: Logistic regression is specifically designed for predicting categorical outcomes, making it suitable for this dataset where the target variable is categorical.
+Interpretable results: Logistic regression provides interpretable results by estimating the probabilities of different class outcomes. It allows for understanding the impact of input features on the probability of a particular class, which can be valuable for making informed decisions.
+Simplicity and efficiency: Logistic regression is a relatively simple and computationally efficient model compared to more complex models like neural networks or ensemble methods. It can handle large datasets and is less prone to overfitting, especially when the number of features is limited.
+Feature importance: Logistic regression can estimate the importance of each input feature in determining the target variable. This can aid in identifying the most influential features and understanding their contribution to the classification task.
+Based on these considerations, logistic regression was deemed appropriate for the dataset, offering a balance between interpretability, efficiency, and predictive performance.
+
+6. Data Preprocessing for Model
+To preprocess the data for modeling, the following steps will be applied using the recipe() function:
+Dropping Features: Irrelevant features, those not correlated to the target variable, or already providing valuable information will be dropped. In this case, the features Id, State, storecode, countytownname, and Areaname will be removed from the dataset.
+Creating Dummy Variables: Categorical features such as country, countyname, state_alpha, store_Type, and storecode will be transformed into binary indicators using dummy variable encoding. This allows the model to effectively utilize categorical information.
+Missing Value Imputation: Missing values in the population column will be replaced with the median value of the respective feature. This strategy helps to preserve the overall distribution while handling missing data.
+Estimating the Preprocessed Recipe: The prep() function will be used to estimate the preprocessed recipe, which captures the transformations and imputations to be applied to the data.
+Applying the Prepped Recipe: The prepped recipe will be applied to both the training and test data using the bake() function. This ensures that the same preprocessing steps are consistently applied to new data during model training and evaluation.
+By following these steps, the data will undergo essential preprocessing tasks, including feature selection, encoding categorical variables, and handling missing values. This prepares the data in a suitable format for model training and ensures that the model receives clean and consistent input for accurate predictions.
+
+7. Basic Model Building & Model Tuning 
+After splitting the train dataset into t1 (80%) for training and t2 (20%) for testing, the model building and tuning process involved the following steps:
+Multicollinearity: To address multicollinearity, the Variance Inflation Factor (VIF) was computed for the predictors using the lm() function. Features with a VIF score greater than 5 were iteratively removed to mitigate the collinearity issue.
+Formula Generation: After removing features with high multicollinearity, the formula for the logistic model was obtained based on the remaining predictors.
+Logistic Model Fitting: The glm() function was used to fit the logistic regression model using the obtained formula and specifying the family as "binomial". This function estimates the parameters of the logistic model using maximum likelihood estimation.
+Automated Predictor Selection: The step function was employed to automate the process of selecting the best predictors for the model. This function performs stepwise variable selection, iteratively adding or removing predictors based on their significance.
+Formula Update and Prediction: After running the step function, a new formula was generated with the selected predictors. The logistic model was then re-fitted using this updated formula. The model was used to predict the outcome values for the test data.
+KS Plot and Cutoff Determination: A KS plot was created to evaluate the model's performance. The KS cutoff point was obtained from the plot to categorize the predicted values into "yes" and "no" classes, providing a threshold for decision-making.
+These steps allowed for the building of a logistic regression model with optimized predictors and the determination of an appropriate cutoff for classification based on the KS plot.
+
+8. Results
+The results of the logistic regression model can be summarized as follows:
+AUC Validation: The model's performance was evaluated using the area under the ROC curve (AUC). The AUC values obtained were AUC_t1=0.8482 for the training set t1, AUC_t2=0.8488 for the testing set t2, and AUC_train=0.8485 for the overall training data. These values indicate that the model has good discriminative power in distinguishing between the two classes.
+KS Cutoff: The KS plot was used to determine the optimal cutoff point for classifying the predicted values. The KS cutoff value was found to be 0.7929, which serves as the threshold for categorizing the predicted values into "yes" and "no" categories.
+
+Overall, the logistic regression model demonstrated strong predictive performance, as evidenced by high AUC values. The chosen cutoff point allows for effective classification of the predicted values.
